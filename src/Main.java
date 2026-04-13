@@ -1,13 +1,21 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-void main() {
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    IO.println(String.format("Hello and welcome!"));
+public class Main {
+    public static void main(String[] args) {
+        // 1. On simule une ligne de log brute (comme celle du fichier .txt)
+        String ligneBrute = "192.168.1.45 - admin [15/Mar/2025:10:23:45 +0100] \"GET /index.html HTTP/1.1\" 200 5423 \"-\" \"Mozilla/5.0\"";
 
-    for (int i = 1; i <= 5; i++) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        IO.println("i = " + i);
+        // 2. On utilise ton constructeur pour créer une fiche vide (objet LogEntry)
+        LogEntry log = new LogEntry();
+
+        // 3. On utilise ta méthode de parsing pour remplir la fiche
+        log.parseLine(ligneBrute);
+
+        // 4. On vérifie si ça a marché en utilisant tes Getters
+        System.out.println("--- Test du Parser (Étudiant A) ---");
+        System.out.println("IP détectée   : " + log.getIpAddress());
+        System.out.println("Utilisateur   : " + log.getUser());
+        System.out.println("Date brute    : " + log.getTimestamp());
+        System.out.println("Code HTTP     : " + log.getStatusCode());
+        System.out.println("Page visitée  : " + log.getEndpoint());
+        System.out.println("Navigateur    : " + log.getUserAgent());
     }
 }
