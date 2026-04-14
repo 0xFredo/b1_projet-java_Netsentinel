@@ -1,3 +1,5 @@
+package com.babylon.b1_projetjava_netsentinel;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,6 +63,6 @@ public class LogEntry {
 
     @Override
     public String toString() {
-        return "LogEntry [IP=" + ipAddress + ", Status=" + statusCode + ", URL=" + endpoint + "]";
+        return "com.babylon.b1_projetjava_netsentinel.LogEntry [IP=" + ipAddress + ", Status=" + statusCode + ", URL=" + endpoint + "]";
     }
 }
