@@ -109,14 +109,18 @@ public class Main {
         // ========== ÉTAPE 5: RÉSUMÉ & RAPPORT ==========
         displayAlertsSummary(allAlerts);
 
-        System.out.println("📝 Generating security report...");
-        ReportGenerator generator = new ReportGenerator();
-        generator.generateSecurityReport(allAlerts, reportFile);
-        generator.generateBlockingRules(allAlerts, rulesFile);
+        if (!allAlerts.isEmpty()) {
+            System.out.println("📝 Generating security report...");
+            ReportGenerator generator = new ReportGenerator();
+            generator.generateSecurityReport(allAlerts, reportFile);
+            generator.generateBlockingRules(allAlerts, rulesFile);
 
-        System.out.println("\n✅ NetSentinel analysis complete!");
-        System.out.println("   - Report: " + reportFile);
-        System.out.println("   - Rules: " + rulesFile);
+            System.out.println("\n✅ NetSentinel analysis complete!");
+            System.out.println("   - Report: " + reportFile);
+            System.out.println("   - Rules: " + rulesFile);
+        } else {
+            System.out.println("\n✅ NetSentinel analysis complete - No threats detected, reports not generated.");
+        }
     }
 
     /**
@@ -221,25 +225,25 @@ public class Main {
         }
 
         System.out.print("\n👉 Select file number (1-" + logFiles.length + "): ");
-        Scanner scanner = new Scanner(System.in);
-        
-        int choice = -1;
-        try {
-            String input = scanner.nextLine().trim();
-            choice = Integer.parseInt(input);
-            
-            if (choice < 1 || choice > logFiles.length) {
-                System.err.println("❌ Invalid choice!");
+        try (Scanner scanner = new Scanner(System.in)) {
+            int choice = -1;
+            try {
+                String input = scanner.nextLine().trim();
+                choice = Integer.parseInt(input);
+                
+                if (choice < 1 || choice > logFiles.length) {
+                    System.err.println("❌ Invalid choice!");
+                    return null;
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("❌ Please enter a valid number!");
                 return null;
             }
-        } catch (NumberFormatException e) {
-            System.err.println("❌ Please enter a valid number!");
-            return null;
-        }
 
-        String selectedFile = logFiles[choice - 1].getPath();
-        System.out.println("\n✓ Selected: " + selectedFile + "\n");
-        return selectedFile;
+            String selectedFile = logFiles[choice - 1].getPath();
+            System.out.println("\n✓ Selected: " + selectedFile + "\n");
+            return selectedFile;
+        }
     }
 
     /**
