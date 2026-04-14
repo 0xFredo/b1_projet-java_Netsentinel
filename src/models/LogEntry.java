@@ -2,19 +2,20 @@ package models;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Représente une entrée de log Apache Combined Format
- * Format: 192.168.1.45 - - [15/Mar/2025:10:23:45 +0100] "GET /index.html HTTP/1.1" 200 5423 "-" "Mozilla/5.0"
+ * Format: 172.16.1.19 - - [15/Mar/2025:06:00:06 +0100] "GET /api/v1/stats HTTP/1.1" 200 1063 "..." "..."
  */
 public class LogEntry {
     private static final String LOG_PATTERN = 
-        "^([\\d.]+) - ([^ ]*) \\[([^\\]]+)\\] \"([A-Z]+) ([^ ]*) ([^ ]*?)\" (\\d{3}) (\\d+|-) \"([^\"]*)\" \"([^\"]*)\"";
+        "^([\\d.]+) - ([^ ]*) \\[([^\\]]+)\\] \"([A-Z]+) ([^ ]*) ([^ ]*?)\" (\\d{3}) (\\d+|-) \"([^\"]*)\" \"(.*)\"$";
     
     private static final Pattern PATTERN = Pattern.compile(LOG_PATTERN);
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z");
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss", Locale.ENGLISH);
 
     private String ipAddress;
     private String username;
@@ -45,6 +46,9 @@ public class LogEntry {
             entry.ipAddress = matcher.group(1);
             entry.username = matcher.group(2);
             String dateStr = matcher.group(3);
+            // Strip timezone (LocalDateTime doesn't support it)
+            // Format: 15/Mar/2025:06:00:06 +0100 → 15/Mar/2025:06:00:06
+            dateStr = dateStr.replaceAll("\\s*[+-]\\d{2}:?\\d{2}$", "");
             entry.timestamp = LocalDateTime.parse(dateStr, DATE_FORMAT);
             entry.method = matcher.group(4);
             entry.url = matcher.group(5);

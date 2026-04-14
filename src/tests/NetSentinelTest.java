@@ -1,3 +1,5 @@
+package tests;
+
 import models.LogEntry;
 import models.Alert;
 import models.Severity;
@@ -12,6 +14,7 @@ import java.util.List;
 /**
  * NetSentinel Security Detectors Tests
  * Custom test suite without JUnit dependencies
+ * Package: tests
  */
 public class NetSentinelTest {
 

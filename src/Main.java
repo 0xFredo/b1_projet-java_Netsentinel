@@ -11,6 +11,7 @@ import utils.ReportGenerator;
 import utils.WhitelistManager;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -31,8 +32,14 @@ public class Main {
         System.out.println("║                    & Intrusion Detection System                        ║");
         System.out.println("╚════════════════════════════════════════════════════════════════════════╝\n");
 
+        // ========== SÉLECTION DU FICHIER DE LOG ==========
+        String logFile = selectLogFile();
+        if (logFile == null) {
+            System.err.println("❌ No log file selected. Exiting.");
+            return;
+        }
+
         // Configuration
-        String logFile = "data/access_log_clean.txt"; // À remplacer par access_log_attack.txt pour tester
         String whitelistFile = "whitelist.txt";
         String reportFile = "rapport_securite.txt";
         String rulesFile = "regles_blocage.txt";
@@ -186,6 +193,50 @@ public class Main {
             System.out.println("   - " + ua + ": " + count));
 
         System.out.println("\n" + "═".repeat(73) + "\n");
+    }
+
+    /**
+     * Affiche les fichiers disponibles et permet à l'utilisateur de sélectionner un fichier de log
+     */
+    private static String selectLogFile() {
+        File dataDir = new File("data");
+        if (!dataDir.exists() || !dataDir.isDirectory()) {
+            System.err.println("❌ Data directory not found!");
+            return null;
+        }
+
+        File[] logFiles = dataDir.listFiles((dir, name) -> name.endsWith(".txt"));
+        if (logFiles == null || logFiles.length == 0) {
+            System.err.println("❌ No log files found in data/ directory!");
+            return null;
+        }
+
+        System.out.println("📂 Available log files in data/ directory:\n");
+        for (int i = 0; i < logFiles.length; i++) {
+            long sizeKB = logFiles[i].length() / 1024;
+            System.out.println("   [" + (i + 1) + "] " + logFiles[i].getName() + " (" + sizeKB + " KB)");
+        }
+
+        System.out.print("\n👉 Select file number (1-" + logFiles.length + "): ");
+        Scanner scanner = new Scanner(System.in);
+        
+        int choice = -1;
+        try {
+            String input = scanner.nextLine().trim();
+            choice = Integer.parseInt(input);
+            
+            if (choice < 1 || choice > logFiles.length) {
+                System.err.println("❌ Invalid choice!");
+                return null;
+            }
+        } catch (NumberFormatException e) {
+            System.err.println("❌ Please enter a valid number!");
+            return null;
+        }
+
+        String selectedFile = logFiles[choice - 1].getPath();
+        System.out.println("\n✓ Selected: " + selectedFile + "\n");
+        return selectedFile;
     }
 
     /**
