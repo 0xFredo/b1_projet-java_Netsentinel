@@ -1,4 +1,6 @@
-package com.babylon.b1_projetjava_netsentinel;
+package analyzers;
+
+import models.LogEntry;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,6 +8,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Analyseur de logs - Statistiques et extraction d'informations
+ */
 public class LogAnalyzer {
 
     /**
@@ -38,7 +43,7 @@ public class LogAnalyzer {
             String value = "";
             switch (type) {
                 case "IP":  value = log.getIpAddress(); break;
-                case "URL": value = log.getEndpoint(); break;
+                case "URL": value = log.getUrl(); break;
                 case "UA":  value = log.getUserAgent(); break;
             }
 

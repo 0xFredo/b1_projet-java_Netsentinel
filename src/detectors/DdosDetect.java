@@ -1,9 +1,22 @@
+package detectors;
+
 import java.time.Duration;
 import java.util.*;
+import models.Alert;
+import models.LogEntry;
+import models.Severity;
 
-public class DdosDetect implements ThreatDetector {
+/**
+ * Détecteur de DDoS (Distributed Denial of Service)
+ * Analyse le volume de requêtes pour détecter du trafic anormal
+ */
+public class DdosDetect {
 
-    @Override
+    /**
+     * Analyse les logs pour détecter un trafic DDoS
+     * @param logs list de toutes les LogEntry
+     * @return list d'alertes détectées
+     */
     public List<Alert> detect(List<LogEntry> logs) {
 
         List<Alert> alertes = new ArrayList<>();
@@ -22,7 +35,7 @@ public class DdosDetect implements ThreatDetector {
         Map<String, List<LogEntry>> byIp = new HashMap<>();
 
         for (LogEntry log : logs) {
-            byIp.computeIfAbsent(log.getIp(), k -> new ArrayList<>()).add(log);
+            byIp.computeIfAbsent(log.getIpAddress(), k -> new ArrayList<>()).add(log);
         }
 
         for (String ip : byIp.keySet()) {
@@ -47,10 +60,11 @@ public class DdosDetect implements ThreatDetector {
 
                     alertes.add(new Alert(
                             ip,
+                            Severity.HIGH,
                             "DDOS",
-                            Alert.Severite.HIGH,
                             "Trafic anormal: " + rate + " req/sec",
-                            entre.get(fin).getTimestamp()
+                            entre.get(fin).getTimestamp(),
+                            entre.get(fin)
                     ));
 
                     break;
