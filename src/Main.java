@@ -41,8 +41,11 @@ public class Main {
 
         // Configuration
         String whitelistFile = "whitelist.txt";
-        String reportFile = "rapport_securite.txt";
-        String rulesFile = "regles_blocage.txt";
+        String reportFile = "out/rapport_securite.txt";
+        String rulesFile = "out/regles_blocage.txt";
+        
+        // Ensure output directory exists
+        new File("out").mkdirs();
 
         // ========== ÉTAPE 1: PARSING ==========
         System.out.println("📂 Loading logs from: " + logFile);
