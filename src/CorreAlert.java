@@ -15,7 +15,7 @@ public class CorreAlert {
             List<Alert> ipAlertes = byIp.get(ip);
             Set<String> types = new HashSet<>();
 
-            for (Alert a : ipAlerets) {
+            for (Alert a : ipAlertes) {
                 types.add(a.getType());
             }
 
